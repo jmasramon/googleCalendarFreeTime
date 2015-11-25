@@ -12,6 +12,9 @@ var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
     process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'calendar-nodejs-quickstart.json';
 
+var THREE_WEEKS = 21,
+    WORK_HOURS_THREE_WEEKS = 15*8;
+
 // Load client secrets from a local file.
 fs.readFile('client_secret.json', function processClientSecrets(err, content) {
     if (err) {
@@ -21,6 +24,7 @@ fs.readFile('client_secret.json', function processClientSecrets(err, content) {
     // Authorize a client with the loaded credentials, then call the
     // Google Calendar API.
     authorize(JSON.parse(content), listEvents);
+    authorize(JSON.parse(content), getFreeTime);
 });
 
 /**
@@ -130,4 +134,48 @@ function listEvents(auth) {
             }
         }
     });
+}
+
+/**
+ * Lists the next 3 weeks events on the user's primary calendar,
+ * and calculates the remaining free working time.
+ *
+ * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
+ */
+function getFreeTime(auth) {
+    var freeTimeHours = WORK_HOURS_THREE_WEEKS;
+    var calendar = google.calendar('v3');
+    calendar.events.list({
+        auth: auth,
+        calendarId: 'primary',
+        timeMin: (new Date()).toISOString(),
+        timeMax: nDaysFromNow(THREE_WEEKS),
+        singleEvents: true,
+        orderBy: 'startTime'
+    }, function(err, response) {
+        if (err) {
+            console.log('The API returned an error: ' + err);
+            return;
+        }
+        var events = response.items;
+        if (events.length === 0) {
+            console.log('No upcoming events found.');
+        } else {
+            console.log('Upcoming events:');
+            for (var i = 0; i < events.length; i++) {
+                var event = events[i];
+                var start = event.start.dateTime || event.start.date;
+                var end = event.end.dateTime || event.end.date;
+                console.log('%s - %s - %s', start, end, event.summary);
+                freeTimeHours -= Math.abs(new Date(end) - new Date(start)) / 36e5;
+            }
+            console.log('freeTimeHours:', freeTimeHours.toFixed(2));
+        }
+    });
+}
+
+function nDaysFromNow(numDays) {
+    var dat = new Date();
+    dat.setDate(dat.getDate() + numDays);
+    return dat.toISOString();
 }
