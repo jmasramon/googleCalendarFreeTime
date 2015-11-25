@@ -1,0 +1,16 @@
+{
+  "name": "google_calendar",
+  "version": "1.0.0",
+  "description": "get your free time for a period",
+  "main": "index.js",
+  "dependencies": {
+    "google-auth-library": "^0.9.7",
+    "googleapis": "^2.1.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
