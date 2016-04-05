@@ -13,12 +13,12 @@ var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||  process.env.USERPR
 var TOKEN_PATH = TOKEN_DIR + 'calendar-nodejs-quickstart.json';
 
 var DAY_NUMBER = {
-        TWO_WEEKS: 14,
-        THREE_WEEKS: 21
+        TWO_WEEKS: 14 - 1,
+        THREE_WEEKS: 21 - 1
     },
     WORK_HOURS = {
-        TWO_WEEKS: 10 * 8,
-        THREE_WEEKS: 15 * 8
+        TWO_WEEKS: (10 -1) * 8,
+        THREE_WEEKS: (15 -1) * 8
     },
     SPRINT_DURATION = 'TWO_WEEKS';
 
