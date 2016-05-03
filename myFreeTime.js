@@ -20,7 +20,7 @@ var DAY_NUMBER = {
         TWO_WEEKS: (10 -1) * 8,
         THREE_WEEKS: (15 -1) * 8
     },
-    SPRINT_DURATION = 'TWO_WEEKS';
+    SPRINT_DURATION = 'THREE_WEEKS';
 
 // Load client secrets from a local file.
 fs.readFile('client_secret.json', function processClientSecrets(err, content) {
@@ -192,7 +192,7 @@ function getFreeTime(auth) {
                     // console.log('Ignored event in fully substracted day !!');
                 }
             }
-            console.log('freeTimeHours:', freeTimeHours.toFixed(2));
+            console.log('freeTimeHours:', freeTimeHours.toFixed(2), 'over:', WORK_HOURS.THREE_WEEKS, '%:', freeTimeHours.toFixed(2)/WORK_HOURS.THREE_WEEKS*100);
         }
     });
 }
